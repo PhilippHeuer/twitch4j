@@ -41,6 +41,7 @@ public class SubscriptionTypes {
     public final PredictionEndType PREDICTION_END;
     public final StreamOfflineType STREAM_OFFLINE;
     public final StreamOnlineType STREAM_ONLINE;
+    @Unofficial public final BetaUserAuthorizationGrantType BETA_USER_AUTHORIZATION_GRANT;
     public final UserAuthorizationRevokeType USER_AUTHORIZATION_REVOKE;
     public final UserUpdateType USER_UPDATE;
 
@@ -80,6 +81,7 @@ public class SubscriptionTypes {
                 PREDICTION_END = new PredictionEndType(),
                 STREAM_OFFLINE = new StreamOfflineType(),
                 STREAM_ONLINE = new StreamOnlineType(),
+                BETA_USER_AUTHORIZATION_GRANT = new BetaUserAuthorizationGrantType(),
                 USER_AUTHORIZATION_REVOKE = new UserAuthorizationRevokeType(),
                 USER_UPDATE = new UserUpdateType()
             ).collect(Collectors.toMap(type -> type.getName() + ':' + type.getVersion(), Function.identity()))
