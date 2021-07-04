@@ -4,7 +4,6 @@ on:
   schedule:
     # Runs at 06:00 UTC on the 1, 15 and 29th of every month
     - cron: 0 6 */14 * *
-
 jobs:
   gradle_update:
     name: Gradle Update

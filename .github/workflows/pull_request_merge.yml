@@ -1,0 +1,31 @@
+name: Merge Pull Request
+on:
+  pull_request_review:
+    types: [ submitted ]
+  check_suite:
+    types: [ completed ]
+
+jobs:
+  auto_merge:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.review.state == 'approved' }}
+    steps:
+      - uses: actions/script@v3
+        id: script-check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          result-encoding: json
+          script: |
+            const repo = await github.pulls.listReviews({
+              owner: context.repo.owner
+              repo: context.repo.repo
+              pull_number: context.payload.pull_request.number
+            })
+            return { automerge: repo.filter(review => review.state == "approved").length > 1 } // auto-merge more than 1 approved PR
+      - uses: pascalgn/automerge-action@v0.13.0
+        if: ${{ steps.script-check.outputs.result.automerge }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
+          MERGE_COMMIT_MESSAGE: pull-request-title

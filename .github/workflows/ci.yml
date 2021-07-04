@@ -1,0 +1,46 @@
+name: CI
+on:
+  push:
+    branches-ignore: [ main, master ] # ignoring branch when will be pushed using release build TODO: use main branch in next release
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+  pull_request:
+    branches: [ develop ]
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+
+env:
+  RELEASE: false
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jvm: [ 8, 11, 15 ]
+    steps:
+      - uses: actions/checkout@v2.3.4
+        name: Checkout
+      - uses: actions/cache@v2.1.4
+        name: Cache JDK${{ matrix.jvm }}
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: JDK${{ matrix.jvm }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: JDK${{ matrix.jvm }}-gradle-
+      - uses: actions/setup-java@v1.4.3
+        name: Setup JDK${{ matrix.jvm }}
+        with:
+          java-version: ${{ matrix.jvm }}
+      - name: Test with JDK${{ matrix.jvm }}
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          arguments: check

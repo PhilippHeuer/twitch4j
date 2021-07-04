@@ -1,0 +1,75 @@
+name: Release
+on: [ workflow_dispatch ]
+
+env:
+  RELEASE: true
+  GPG_KEY: ${{ secrets.GPG_KEY }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+  OSSRH_PASSPHRASE: ${{ secrets.OSSRH_PASSPHRASE }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semantic.outputs.new_release_version }}
+    steps:
+      - uses: actions/checkout@v2.3.4
+        name: Checkout
+        with:
+          ref: main
+      - uses: actions/cache@v2.1.4
+        name: Gradle Cache JDK8
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: JDK8-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: JDK8-gradle-
+      - uses: actions/setup-java@v1.4.3
+        name: Setup JDK8
+        with:
+          java-version: 8
+      - uses: actions/setup-node@v2.1.5
+        name: Setup NodeJS
+      - uses: cycjimmy/semantic-release-action@v2.5.3
+        name: Release
+        id: semantic
+        with:
+          branch: main
+          extra_plugins: |
+            @semantic-release/git
+            @semantic-release/exec
+            conventional-changelog-conventionalcommits
+  javadoc:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+      - uses: actions/cache@v2
+        name: Cache JDK15
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: JDK15-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: JDK15-gradle-
+      - uses: actions/setup-java@v1
+        name: Setup JDK15
+        with:
+          java-version: 15
+      - name: Clear old Javadoc
+        run: rm -rf $GITHUB_WORKSPACE/docs/static/javadoc
+      - name: Create new Javadoc
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          arguments: -Pversion=${{ job.release.outputs.version }} aggregateJavadoc
+      - name: Push new Javadoc update
+        run: |
+          cd ./docs
+          git add .
+          git commit -m "docs(javadoc): release javadoc v${{ job.release.outputs.version }}"
+          git push origin main

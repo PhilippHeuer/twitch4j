@@ -1,0 +1,17 @@
+name: Auto-Release by Cronjob
+on:
+  schedule:
+    - cron: '0 22 */1 * FRI' # deploy release each first fridays on the month on 10PM UTC
+
+jobs:
+  push:
+    name: Push
+    runs-on: ubuntu-latest
+    if: ${{ github.repository.toLowerCase() === 'twitch4j/twitch4j' }} # runs only main repo - allows to skipping trigger from other repos
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+        with:
+          ref: develop
+      - run: git push origin main # push to main repo
+        name: Push to 'main'
