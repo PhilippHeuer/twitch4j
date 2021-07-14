@@ -65,7 +65,7 @@ public class TwitchChatConnectionPool extends TwitchModuleConnectionPool<TwitchC
     protected final boolean automaticallyPartOnBan = false;
 
     @Override
-    public boolean sendMessage(String channel, String message, @Unofficial @Nullable Map<String, Object> tags) {
+    public boolean sendMessage(String channel, String message, @Nullable Map<String, Object> tags) {
         return this.sendMessage(channel, channel, message, tags);
     }
 
@@ -91,8 +91,7 @@ public class TwitchChatConnectionPool extends TwitchModuleConnectionPool<TwitchC
      * @param replyMsgId                    the msgId of the parent message being replied to (optional).
      * @return whether a {@link TwitchChat} instance was found and used to send the message
      */
-    @Unofficial
-    public boolean sendMessage(final String channelToIdentifyChatInstance, final String targetChannel, final String message, final String nonce, final String replyMsgId) {
+    public boolean sendMessage(final String channelToIdentifyChatInstance, final String targetChannel, final String message, @Unofficial final String nonce, final String replyMsgId) {
         final Map<String, Object> tags = new LinkedHashMap<>();
         if (nonce != null) tags.put(IRCMessageEvent.NONCE_TAG_NAME, nonce);
         if (replyMsgId != null) tags.put(ChatReply.REPLY_MSG_ID_TAG_NAME, replyMsgId);
@@ -105,10 +104,10 @@ public class TwitchChatConnectionPool extends TwitchModuleConnectionPool<TwitchC
      * @param channelToIdentifyChatInstance the channel used to identify which {@link TwitchChat} instance should be used to send the message; the instance must be subscribed to this channel.
      * @param targetChannel                 the channel to send the message to, if not null (otherwise it is sent directly on the socket).
      * @param message                       the message to be sent.
-     * @param tags                          the message tags (unofficial).
+     * @param tags                          the message tags.
      * @return whether a {@link TwitchChat} instance was found and used to send the message
      */
-    public boolean sendMessage(String channelToIdentifyChatInstance, String targetChannel, String message, @Unofficial @Nullable Map<String, Object> tags) {
+    public boolean sendMessage(String channelToIdentifyChatInstance, String targetChannel, String message, @Nullable Map<String, Object> tags) {
         if (channelToIdentifyChatInstance == null)
             return false;
 

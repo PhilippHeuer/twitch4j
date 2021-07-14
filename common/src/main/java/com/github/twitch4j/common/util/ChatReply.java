@@ -1,6 +1,5 @@
 package com.github.twitch4j.common.util;
 
-import com.github.twitch4j.common.annotation.Unofficial;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -12,7 +11,6 @@ import static com.github.twitch4j.common.util.EscapeUtils.unescapeTagValue;
  * Meta-info regarding the <i>parent</i> message being replied to.
  */
 @Value
-@Unofficial
 public class ChatReply {
 
     public static final String REPLY_MSG_ID_TAG_NAME = "reply-parent-msg-id";

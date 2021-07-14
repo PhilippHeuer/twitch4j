@@ -17,7 +17,12 @@ import java.util.List;
 @Value
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class CheerEvent extends AbstractChannelEvent {
+public class CheerEvent extends AbstractChannelEvent implements ReplyableEvent {
+
+    /**
+     * Raw IRC Message Event
+     */
+    IRCMessageEvent messageEvent;
 
 	/**
 	 * Event Target User
@@ -50,19 +55,21 @@ public class CheerEvent extends AbstractChannelEvent {
     @Unofficial
     private List<AutoModFlag> flags;
 
-	/**
-	 * Event Constructor
+    /**
+     * Event Constructor
      *
-     * @param channel The channel that this event originates from.
-     * @param user The donating user.
-     * @param message The donation message.
-     * @param bits The amount of bits.
+     * @param event            The raw message event.
+     * @param channel          The channel that this event originates from.
+     * @param user             The donating user.
+     * @param message          The donation message.
+     * @param bits             The amount of bits.
      * @param subscriberMonths The exact number of months the user has been a subscriber.
      * @param subscriptionTier The tier at which the user is subscribed.
-     * @param flags The regions of the message that were flagged by AutoMod.
+     * @param flags            The regions of the message that were flagged by AutoMod.
      */
-	public CheerEvent(EventChannel channel, EventUser user, String message, Integer bits, int subscriberMonths, int subscriptionTier, List<AutoModFlag> flags) {
+	public CheerEvent(IRCMessageEvent event, EventChannel channel, EventUser user, String message, Integer bits, int subscriberMonths, int subscriptionTier, List<AutoModFlag> flags) {
 		super(channel);
+		this.messageEvent = event;
 		this.user = user;
 		this.message = message;
 		this.bits = bits;

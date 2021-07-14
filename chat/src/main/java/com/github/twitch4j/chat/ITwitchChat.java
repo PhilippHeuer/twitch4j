@@ -51,8 +51,8 @@ public interface ITwitchChat extends AutoCloseable {
      * @param replyMsgId the msgId of the parent message being replied to (optional).
      * @return whether the message was added to the queue
      */
-    @Unofficial
-    default boolean sendMessage(String channel, String message, String nonce, String replyMsgId) {
+    @SuppressWarnings("UnusedReturnValue")
+    default boolean sendMessage(String channel, String message, @Unofficial String nonce, String replyMsgId) {
         final Map<String, Object> tags = new LinkedHashMap<>(); // maintain insertion order
         if (nonce != null) tags.put(IRCMessageEvent.NONCE_TAG_NAME, nonce);
         if (replyMsgId != null) tags.put(ChatReply.REPLY_MSG_ID_TAG_NAME, replyMsgId);
@@ -64,11 +64,10 @@ public interface ITwitchChat extends AutoCloseable {
      *
      * @param channel the name of the channel to send the message to.
      * @param message the message to be sent.
-     * @param tags    the message tags (unofficial).
+     * @param tags    the message tags.
      * @return whether the message was added to the queue
      */
-    @Unofficial
-    boolean sendMessage(String channel, String message, @Unofficial @Nullable Map<String, Object> tags);
+    boolean sendMessage(String channel, String message, @Nullable Map<String, Object> tags);
 
     /**
      * Returns a set of all currently joined channels (without # prefix)

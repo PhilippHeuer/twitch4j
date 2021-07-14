@@ -10,9 +10,7 @@ import com.github.twitch4j.chat.events.CommandEvent;
 import com.github.twitch4j.chat.events.IRCEventHandler;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
-import com.github.twitch4j.common.annotation.Unofficial;
 import com.github.twitch4j.common.config.ProxyConfig;
-import com.github.twitch4j.common.util.ChatReply;
 import com.github.twitch4j.common.util.CryptoUtils;
 import com.github.twitch4j.common.util.EscapeUtils;
 import com.github.twitch4j.common.util.ExponentialBackoffStrategy;
@@ -666,7 +664,7 @@ public class TwitchChat implements ITwitchChat {
     }
 
     @Override
-    public boolean sendMessage(String channel, String message, @Unofficial Map<String, Object> tags) {
+    public boolean sendMessage(String channel, String message, Map<String, Object> tags) {
         StringBuilder sb = new StringBuilder();
         if (tags != null && !tags.isEmpty()) {
             sb.append('@');

@@ -1,5 +1,6 @@
 package com.github.twitch4j.chat.events.channel;
 
+import com.github.twitch4j.chat.ITwitchChat;
 import com.github.twitch4j.chat.events.AbstractChannelEvent;
 import com.github.twitch4j.chat.flag.AutoModFlag;
 import com.github.twitch4j.common.annotation.Unofficial;
@@ -25,7 +26,12 @@ import java.util.Optional;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class SubscriptionEvent extends AbstractChannelEvent {
+public class SubscriptionEvent extends AbstractChannelEvent implements ReplyableEvent {
+
+    /**
+     * Raw IRC Message Event
+     */
+    IRCMessageEvent messageEvent;
 
     /**
      * Event Target User
@@ -95,6 +101,7 @@ public class SubscriptionEvent extends AbstractChannelEvent {
     /**
      * Event Constructor
      *
+     * @param event              The raw message event.
      * @param channel            ChatChannel the user subscribed to
      * @param user               User that subscribed
      * @param subPlan            Sub Plan
@@ -108,8 +115,9 @@ public class SubscriptionEvent extends AbstractChannelEvent {
      * @param multiMonthTenure   The length of multi-month subscription tenure that has already been served
      * @param flags              The regions of the message that were flagged by AutoMod.
      */
-    public SubscriptionEvent(EventChannel channel, EventUser user, String subPlan, Optional<String> message, Integer months, Boolean gifted, EventUser giftedBy, Integer subStreak, Integer giftMonths, Integer multiMonthDuration, Integer multiMonthTenure, List<AutoModFlag> flags) {
+    public SubscriptionEvent(IRCMessageEvent event, EventChannel channel, EventUser user, String subPlan, Optional<String> message, Integer months, Boolean gifted, EventUser giftedBy, Integer subStreak, Integer giftMonths, Integer multiMonthDuration, Integer multiMonthTenure, List<AutoModFlag> flags) {
         super(channel);
+        this.messageEvent = event;
         this.user = user;
         this.subscriptionPlan = subPlan;
         this.message = message;
@@ -121,6 +129,16 @@ public class SubscriptionEvent extends AbstractChannelEvent {
         this.multiMonthDuration = multiMonthDuration;
         this.multiMonthTenure = multiMonthTenure;
         this.flags = flags;
+    }
+
+    /**
+     * Replies to this sub event, <i>if</i> a message was included when the subscription was shared.
+     * <p>
+     * {@inheritDoc}
+     */
+    @Override
+    public void reply(ITwitchChat chat, String message) {
+        getMessage().ifPresent(m -> ReplyableEvent.super.reply(chat, message));
     }
 
     /**

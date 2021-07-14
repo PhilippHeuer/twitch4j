@@ -19,7 +19,7 @@ import java.util.Set;
 @Value
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class ChannelMessageActionEvent extends AbstractChannelEvent {
+public class ChannelMessageActionEvent extends AbstractChannelEvent implements ReplyableEvent {
 
     /**
      * RAW Message Event

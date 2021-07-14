@@ -23,7 +23,7 @@ import java.util.Set;
 @Value
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class ChannelMessageEvent extends AbstractChannelEvent {
+public class ChannelMessageEvent extends AbstractChannelEvent implements ReplyableEvent {
 
     /**
      * RAW Message Event
@@ -66,7 +66,6 @@ public class ChannelMessageEvent extends AbstractChannelEvent {
      * Information regarding the parent message being replied to, if applicable.
      */
     @Nullable
-    @Unofficial
     @Getter(lazy = true)
     private ChatReply replyInfo = ChatReply.parse(getMessageEvent().getTags());
 
