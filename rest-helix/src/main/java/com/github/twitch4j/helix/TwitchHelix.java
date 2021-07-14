@@ -309,6 +309,50 @@ public interface TwitchHelix {
     );
 
     /**
+     * Gets all custom emotes for a specific Twitch channel including subscriber emotes, Bits tier emotes, and follower emotes.
+     * <p>
+     * Custom channel emotes are custom emoticons that viewers may use in Twitch chat once they are subscribed to, cheered in, or followed the channel that owns the emotes.
+     *
+     * @param authToken     Any User OAuth Token or App Access Token.
+     * @param broadcasterId The broadcaster whose emotes are being requested.
+     * @return EmoteList
+     */
+    @RequestLine("GET /chat/emotes?broadcaster_id={broadcaster_id}")
+    @Headers("Authorization: Bearer {token}")
+    HystrixCommand<EmoteList> getChannelEmotes(
+        @Param("token") String authToken,
+        @Param("broadcaster_id") String broadcasterId
+    );
+
+    /**
+     * Gets all global emotes.
+     * <p>
+     * Global emotes are Twitch-specific emoticons that every user can use in Twitch chat.
+     *
+     * @param authToken Any User OAuth Token or App Access Token.
+     * @return EmoteList
+     */
+    @RequestLine("GET /chat/emotes/global")
+    @Headers("Authorization: Bearer {token}")
+    HystrixCommand<EmoteList> getGlobalEmotes(
+        @Param("token") String authToken
+    );
+
+    /**
+     * Gets all Twitch emotes for one or more specific emote sets.
+     *
+     * @param authToken Any User OAuth Token or App Access Token.
+     * @param ids       IDs of the emote sets. Minimum: 1. Maximum: 25. Warning: at the time of writing, the enforced maximum is actually 10.
+     * @return EmoteList
+     */
+    @RequestLine("GET /chat/emotes/set?emote_set_id={emote_set_id}")
+    @Headers("Authorization: Bearer {token}")
+    HystrixCommand<EmoteList> getEmoteSets(
+        @Param("token") String authToken,
+        @Param("emote_set_id") Collection<String> ids
+    );
+
+    /**
      * Gets the status of one or more provided codes.
      * <p>
      * The API is throttled to one request per second per authenticated user.
