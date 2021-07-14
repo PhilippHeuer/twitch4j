@@ -28,6 +28,7 @@ public class SubscriptionTypes {
     @Unofficial public final BetaChannelSubscriptionGiftType BETA_CHANNEL_SUBSCRIPTION_GIFT;
     public final ChannelUnbanType CHANNEL_UNBAN;
     public final ChannelUpdateType CHANNEL_UPDATE;
+    public final DropEntitlementGrantType DROP_ENTITLEMENT_GRANT;
     @Unofficial public final BetaExtensionBitsTransactionCreateType BETA_EXTENSION_BITS_TRANSACTION_CREATE;
     public final HypeTrainBeginType HYPE_TRAIN_BEGIN;
     public final HypeTrainEndType HYPE_TRAIN_END;
@@ -67,6 +68,7 @@ public class SubscriptionTypes {
                 BETA_CHANNEL_SUBSCRIPTION_GIFT = new BetaChannelSubscriptionGiftType(),
                 CHANNEL_UNBAN = new ChannelUnbanType(),
                 CHANNEL_UPDATE = new ChannelUpdateType(),
+                DROP_ENTITLEMENT_GRANT = new DropEntitlementGrantType(),
                 BETA_EXTENSION_BITS_TRANSACTION_CREATE = new BetaExtensionBitsTransactionCreateType(),
                 HYPE_TRAIN_BEGIN = new HypeTrainBeginType(),
                 HYPE_TRAIN_END = new HypeTrainEndType(),

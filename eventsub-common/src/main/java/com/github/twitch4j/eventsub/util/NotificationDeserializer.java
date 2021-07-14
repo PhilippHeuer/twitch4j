@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.twitch4j.common.util.TypeConvert;
 import com.github.twitch4j.eventsub.EventSubNotification;
 import com.github.twitch4j.eventsub.EventSubSubscription;
 import com.github.twitch4j.eventsub.events.EventSubEvent;
@@ -22,10 +23,23 @@ public class NotificationDeserializer extends JsonDeserializer<EventSubNotificat
         final EventSubSubscription sub = getObject(p.getCodec(), root, "subscription", EventSubSubscription.class);
         if (sub == null) return null;
 
-        final SubscriptionType<?, ?, ?> type = sub.getType();
-        final EventSubEvent event = type != null ? getObject(p.getCodec(), root, "event", type.getEventClass()) : null;
-
         final String challenge = root.path("challenge").asText(null);
+
+        final SubscriptionType<?, ?, ?> type = sub.getType();
+        final EventSubEvent event;
+        if (challenge == null && type != null && sub.isBatchingEnabled()) {
+            JsonNode eventsNode = root.get("events");
+            if (eventsNode == null || !eventsNode.isArray()) {
+                event = null;
+            } else {
+                // hack: put the array of events in a sterile object node so we can directly deserialize to subclasses of BatchedEventSubEvents
+                JsonNode eventsObj = TypeConvert.getObjectMapper().createObjectNode().set("events", eventsNode);
+                event = p.getCodec().treeToValue(eventsObj, type.getEventClass());
+            }
+        } else {
+            event = type != null ? getObject(p.getCodec(), root, "event", type.getEventClass()) : null;
+        }
+
         return new EventSubNotification(sub, event, challenge);
     }
 

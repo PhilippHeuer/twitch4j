@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
+import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.Map;
@@ -70,6 +71,13 @@ public class EventSubSubscription {
     private Integer cost;
 
     /**
+     * Whether events fired for this type are batched by Twitch.
+     */
+    @Accessors(fluent = true)
+    @JsonProperty("is_batching_enabled")
+    private Boolean isBatchingEnabled;
+
+    /**
      * The category of the subscription.
      */
     @JsonProperty("type")
@@ -83,7 +91,8 @@ public class EventSubSubscription {
 
     @JsonCreator
     public EventSubSubscription(@JsonProperty("id") String id, @JsonProperty("status") EventSubSubscriptionStatus status, @JsonProperty("type") String type, @JsonProperty("version") String version,
-                                @JsonProperty("condition") Map<String, Object> condition, @JsonProperty("created_at") Instant createdAt, @JsonProperty("transport") EventSubTransport transport, @JsonProperty("cost") Integer cost) {
+                                @JsonProperty("condition") Map<String, Object> condition, @JsonProperty("created_at") Instant createdAt, @JsonProperty("transport") EventSubTransport transport, @JsonProperty("cost") Integer cost,
+                                @JsonProperty("is_batching_enabled") Boolean isBatchingEnabled) {
         this.id = id;
         this.status = status;
         this.rawType = type;
@@ -93,6 +102,7 @@ public class EventSubSubscription {
         this.createdAt = createdAt;
         this.transport = transport;
         this.cost = cost;
+        this.isBatchingEnabled = isBatchingEnabled != null ? isBatchingEnabled : getType().isBatchingEnabled();
     }
 
 }
