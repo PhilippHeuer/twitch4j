@@ -1,6 +1,11 @@
 package com.github.twitch4j.pubsub.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.Instant;
 
 @Data
 public class ChannelBitsData {
@@ -8,11 +13,13 @@ public class ChannelBitsData {
     /**
      * The id for the user that cheered
      */
+    @Nullable
     private String userId;
 
     /**
      * The login name for the user that cheered
      */
+    @Nullable
     private String userName;
 
     /**
@@ -55,6 +62,20 @@ public class ChannelBitsData {
      * this object will contain more information regarding the new level
      */
     private BadgeEntitlement badgeEntitlement;
+
+    /**
+     * Whether or not the event was anonymous
+     */
+    @Accessors(fluent = true)
+    @JsonProperty("is_anonymous")
+    private Boolean isAnonymous = false;
+
+    /**
+     * @return the parsed time in an Instant wrapper
+     */
+    public Instant getTimeAsInstant() {
+        return Instant.parse(this.time);
+    }
 
     @Data
     public static class BadgeEntitlement {

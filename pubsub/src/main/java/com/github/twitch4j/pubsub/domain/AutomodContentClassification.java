@@ -72,7 +72,7 @@ public class AutomodContentClassification {
         SEXUAL,
 
         /**
-         * Swear words, &*^!#@%*.
+         * Swear words, &amp;*^!#{@literal @}%*.
          */
         @JsonAlias({ "swearing", "vulgar" })
         PROFANITY,
