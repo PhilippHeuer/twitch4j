@@ -90,7 +90,7 @@ subprojects {
 		}
 
 		// Apache Commons
-		api(group = "commons-io", name = "commons-io", version = "2.9.0")
+		api(group = "commons-io", name = "commons-io", version = "2.11.0")
 		api(group = "org.apache.commons", name = "commons-lang3", version = "3.12.0")
 
 		// Logging
